@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Générateur de QR Code</h1>
+    <p>Cliquez sur le bouton pour générer un QR Code unique et le télécharger.</p>
+    
+    <button onclick="generateQR()">Générer et Télécharger le QR Code</button>
+
+    <script>
+        function generateQR() {
+            // Créer une nouvelle fenêtre ou onglet pour télécharger le QR Code
+            window.location.href = '/generate_qr';
+        }
+    </script>
+
+</body>
+</html>
