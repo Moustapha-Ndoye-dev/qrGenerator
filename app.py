@@ -7,7 +7,13 @@ import os
 import io
 
 app = Flask(__name__)
-CORS(app)  # Initialisation du CORS pour permettre les requêtes entre origines
+
+# Activation globale de CORS pour toutes les routes de l'application
+CORS(app)
+
+# Vous pouvez spécifier les origines autorisées si nécessaire comme suit :
+# CORS(app, resources={r"/api/*": {"origins": "https://votre-domaine.com"}})
+
 DATABASE = 'database.db'
 
 # Initialisation de la base de données
@@ -107,5 +113,4 @@ def invalidate_token():
 if __name__ == '__main__':
     init_db()  # Initialiser la base de données au démarrage de l'application
     port = int(os.environ.get("PORT", 5001))
-    app.run(debug=True, port=port)
-    app.run(debug=True, port=port, host='0.0.0.0') 
+    app.run(debug=True, port=port, host='0.0.0.0')  # Démarrer l'application Flask
