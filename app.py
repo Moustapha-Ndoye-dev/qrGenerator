@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)  # Initialisation du CORS pour permettre les requêtes entre origines
 DATABASE = 'database.db'
 
-# Fonction d'initialisation de la base de données
+# Initialisation de la base de données
 def init_db():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
@@ -25,15 +25,15 @@ def init_db():
 
 @app.route('/')
 def index():
-    # Affiche une page d'accueil simple
+    # Afficher une page d'accueil simple
     return render_template('index.html')
 
 @app.route('/generate_qr', methods=['GET'])
 def generate_qr():
-    # Génère un token unique
+    # Générer un token unique
     token = str(uuid.uuid4())
 
-    # Enregistre le token dans la base de données
+    # Enregistrer le token dans la base de données
     try:
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
@@ -42,7 +42,7 @@ def generate_qr():
     except sqlite3.Error as e:
         return jsonify({"error": f"Erreur lors de l'insertion du token dans la base de données: {str(e)}"}), 500
 
-    # Génère un code QR
+    # Générer un code QR
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -53,7 +53,7 @@ def generate_qr():
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
 
-    # Sauvegarde l'image dans un objet BytesIO
+    # Sauvegarder l'image dans un objet BytesIO
     img_bytes = io.BytesIO()
     img.save(img_bytes, format='PNG')
     img_bytes.seek(0)  # Revenir au début du flux
@@ -63,7 +63,7 @@ def generate_qr():
 
 @app.route('/api/tokens', methods=['GET'])
 def get_tokens():
-    # Récupère tous les tokens non utilisés de la base de données
+    # Récupérer tous les tokens non utilisés de la base de données
     try:
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
@@ -76,7 +76,7 @@ def get_tokens():
 
 @app.route('/api/tokens/invalidate', methods=['POST'])
 def invalidate_token():
-    # Récupère le token à invalider
+    # Récupérer le token à invalider
     token = request.json.get('token')
 
     if not token:
@@ -85,7 +85,7 @@ def invalidate_token():
     try:
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
-            # Vérifie si le token existe et s'il n'est pas déjà utilisé
+            # Vérifier si le token existe et s'il n'est pas déjà utilisé
             cursor.execute('SELECT used FROM tokens WHERE token = ?', (token,))
             result = cursor.fetchone()
 
@@ -95,7 +95,7 @@ def invalidate_token():
             if result[0] == 1:
                 return jsonify({"error": "Token has already been used"}), 400
 
-            # Marque le token comme utilisé
+            # Marquer le token comme utilisé
             cursor.execute('UPDATE tokens SET used = 1 WHERE token = ?', (token,))
             conn.commit()
 
@@ -105,6 +105,7 @@ def invalidate_token():
         return jsonify({"error": f"Erreur lors de l'invalidation du token: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    init_db()  # Initialisation de la base de données au démarrage de l'application
-    port = int(os.environ.get("PORT", 8080))  # Utilisation du port spécifié par Railway ou du port 8080 par défaut
-    app.run(debug=True, port=port, host='0.0.0.0')  # Permet à l'application d'écouter sur toutes les interfaces
+    init_db()  # Initialiser la base de données au démarrage de l'application
+    port = int(os.environ.get("PORT", 5001))
+    app.run(debug=True, port=port)
+    app.run(debug=True, port=port, host='0.0.0.0') 
