@@ -106,6 +106,6 @@ def invalidate_token():
 
 if __name__ == '__main__':
     init_db()  # Initialiser la base de données au démarrage de l'application
-    port = int(os.environ.get("PORT", 5001))
+    port = int(os.environ.get("PORT", 8080))
     app.run(debug=True, port=port)
 
