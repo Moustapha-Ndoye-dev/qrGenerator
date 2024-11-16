@@ -3,6 +3,7 @@ import qrcode
 import sqlite3
 import uuid
 from flask_cors import CORS
+import os
 import io
 
 app = Flask(__name__)
@@ -105,4 +106,6 @@ def invalidate_token():
 
 if __name__ == '__main__':
     init_db()  # Initialiser la base de données au démarrage de l'application
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(debug=True, port=port)
+
